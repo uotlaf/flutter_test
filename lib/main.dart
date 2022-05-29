@@ -23,25 +23,69 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int count = 0;
-  void decrement() {
+  double first = 0;
+  double second = 0;
+  bool firstSlot = true;
+
+  void add() {
     setState(() {
-      count--;
+      first += second;
+      second = 0;
     });
   }
 
-  void increment() {
+  void sub() {
     setState(() {
-      count++;
+      first -= second;
     });
   }
 
-  bool get isEmpty {
-    return count == 0;
+  void mult() {
+    setState(() {
+      first *= second;
+    });
   }
 
-  bool get isFull {
-    return count >= 20;
+  void divide() {
+    setState(() {
+      first = first / second;
+    });
+  }
+
+  void setNumber(double num) {
+    setState(() {
+      if (firstSlot) {
+        first = first * 10 + num;
+      } else {
+        second = second * 10 + num;
+      }
+    });
+  }
+
+  void nextSlot() {
+    setState(() {
+      firstSlot = !firstSlot;
+    });
+  }
+
+  void clear() {
+    setState(() {
+      first = 0;
+      second = 0;
+      firstSlot = true;
+    });
+  }
+
+  void switchToFirstSlot() {
+    setState(() {
+      firstSlot = true;
+    });
+  }
+
+  void switchToSecondSlot() {
+    setState(() {
+      firstSlot = false;
+    });
   }
 
   @override
@@ -49,102 +93,292 @@ class _HomeState extends State<Home> {
     return Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
-          title: const Text("Controle de entrada"),
+          title: const Text("Calculadora de notação pós-fixa"),
           centerTitle: true,
           backgroundColor: Colors.black,
         ),
-        body: Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/images/background.png"),
-                  fit: BoxFit.cover),
-            ),
-            child: Column(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (isFull) ...[
-                  const Text(
-                    "Tá cheio",
-                    style: TextStyle(
-                        fontSize: 30,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900),
+                if (firstSlot) ...[
+                  TextButton(
+                    onPressed: switchToFirstSlot,
+                    style: TextButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: const EdgeInsets.all(40)),
+                    child: Text(
+                        style: const TextStyle(color: Colors.white),
+                        first.toString()),
+                  ),
+                  const SizedBox(width: 10),
+                  TextButton(
+                    onPressed: switchToSecondSlot,
+                    style: TextButton.styleFrom(
+                        backgroundColor: Colors.blueGrey,
+                        padding: const EdgeInsets.all(40)),
+                    child: Text(
+                        style: const TextStyle(color: Colors.white),
+                        second.toString()),
                   ),
                 ] else ...[
-                  const Text(
-                    "Pode entrar",
-                    style: TextStyle(
-                        fontSize: 30,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900),
+                  TextButton(
+                    onPressed: switchToFirstSlot,
+                    style: TextButton.styleFrom(
+                        backgroundColor: Colors.blueGrey,
+                        padding: const EdgeInsets.all(40)),
+                    child: Text(
+                        style: const TextStyle(color: Colors.white),
+                        first.toString()),
                   ),
-                ],
-                Text(
-                  "$count",
-                  style: const TextStyle(fontSize: 100, color: Colors.white),
+                  const SizedBox(width: 10),
+                  TextButton(
+                    onPressed: switchToSecondSlot,
+                    style: TextButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: const EdgeInsets.all(40)),
+                    child: Text(
+                        style: const TextStyle(color: Colors.white),
+                        second.toString()),
+                  ),
+                ]
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    setNumber(1);
+                  },
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.all(40),
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Colors.white, width: 5),
+                          borderRadius: BorderRadius.circular(12))),
+                  child: const Text("1"),
                 ),
-                const SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (isEmpty) ...[
-                      TextButton(
-                        onPressed: null,
-                        style: TextButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            padding: const EdgeInsets.all(25),
-                            primary: Colors.black,
-                            shape: RoundedRectangleBorder(
-                                side: const BorderSide(
-                                    color: Colors.green, width: 5),
-                                borderRadius: BorderRadius.circular(12))),
-                        child: const Text("Saiu"),
-                      ),
-                    ] else ...[
-                      TextButton(
-                        onPressed: decrement,
-                        style: TextButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            padding: const EdgeInsets.all(25),
-                            primary: Colors.black,
-                            shape: RoundedRectangleBorder(
-                                side: const BorderSide(
-                                    color: Colors.green, width: 5),
-                                borderRadius: BorderRadius.circular(12))),
-                        child: const Text("Saiu"),
-                      ),
-                    ],
-                    const SizedBox(width: 40),
-                    if (isFull) ...[
-                      TextButton(
-                        onPressed: null,
-                        style: TextButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            padding: const EdgeInsets.all(25),
-                            primary: Colors.black,
-                            shape: RoundedRectangleBorder(
-                                side: const BorderSide(
-                                    color: Colors.green, width: 5),
-                                borderRadius: BorderRadius.circular(12))),
-                        child: const Text("Entrou"),
-                      ),
-                    ] else ...[
-                      TextButton(
-                        onPressed: increment,
-                        style: TextButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            padding: const EdgeInsets.all(25),
-                            primary: Colors.black,
-                            shape: RoundedRectangleBorder(
-                                side: const BorderSide(
-                                    color: Colors.green, width: 5),
-                                borderRadius: BorderRadius.circular(12))),
-                        child: const Text("Entrou"),
-                      ),
-                    ]
-                  ],
+                const SizedBox(width: 5),
+                TextButton(
+                  onPressed: () {
+                    setNumber(2);
+                  },
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.all(40),
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Colors.white, width: 5),
+                          borderRadius: BorderRadius.circular(12))),
+                  child: const Text("2"),
+                ),
+                const SizedBox(width: 5),
+                TextButton(
+                  onPressed: () {
+                    setNumber(3);
+                  },
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.all(40),
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Colors.white, width: 5),
+                          borderRadius: BorderRadius.circular(12))),
+                  child: const Text("3"),
+                ),
+                const SizedBox(width: 5),
+                TextButton(
+                  onPressed: add,
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.all(40),
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Colors.white, width: 5),
+                          borderRadius: BorderRadius.circular(12))),
+                  child: const Text("+"),
                 ),
               ],
-            )));
+            ),
+            const SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    setNumber(4);
+                  },
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.all(40),
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Colors.white, width: 5),
+                          borderRadius: BorderRadius.circular(12))),
+                  child: const Text("4"),
+                ),
+                const SizedBox(width: 5),
+                TextButton(
+                  onPressed: () {
+                    setNumber(5);
+                  },
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.all(40),
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Colors.white, width: 5),
+                          borderRadius: BorderRadius.circular(12))),
+                  child: const Text("5"),
+                ),
+                const SizedBox(width: 5),
+                TextButton(
+                  onPressed: () {
+                    setNumber(6);
+                  },
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.all(40),
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Colors.white, width: 5),
+                          borderRadius: BorderRadius.circular(12))),
+                  child: const Text("6"),
+                ),
+                const SizedBox(width: 5),
+                TextButton(
+                  onPressed: sub,
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.all(40),
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Colors.white, width: 5),
+                          borderRadius: BorderRadius.circular(12))),
+                  child: const Text("-"),
+                ),
+              ],
+            ),
+            const SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    setNumber(7);
+                  },
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.all(40),
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Colors.white, width: 5),
+                          borderRadius: BorderRadius.circular(12))),
+                  child: const Text("7"),
+                ),
+                const SizedBox(width: 5),
+                TextButton(
+                  onPressed: () {
+                    setNumber(8);
+                  },
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.all(40),
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Colors.white, width: 5),
+                          borderRadius: BorderRadius.circular(12))),
+                  child: const Text("8"),
+                ),
+                const SizedBox(width: 5),
+                TextButton(
+                  onPressed: () {
+                    setNumber(9);
+                  },
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.all(40),
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Colors.white, width: 5),
+                          borderRadius: BorderRadius.circular(12))),
+                  child: const Text("9"),
+                ),
+                const SizedBox(width: 5),
+                TextButton(
+                  onPressed: add,
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.all(40),
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Colors.white, width: 5),
+                          borderRadius: BorderRadius.circular(12))),
+                  child: const Text("*"),
+                ),
+              ],
+            ),
+            const SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: clear,
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.all(40),
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Colors.white, width: 5),
+                          borderRadius: BorderRadius.circular(12))),
+                  child: const Text("C"),
+                ),
+                const SizedBox(width: 5),
+                TextButton(
+                  onPressed: () {
+                    setNumber(0);
+                  },
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.all(40),
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Colors.white, width: 5),
+                          borderRadius: BorderRadius.circular(12))),
+                  child: const Text("0"),
+                ),
+                const SizedBox(width: 5),
+                TextButton(
+                  onPressed: nextSlot,
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.all(40),
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Colors.white, width: 5),
+                          borderRadius: BorderRadius.circular(12))),
+                  child: const Text("->"),
+                ),
+                const SizedBox(width: 5),
+                TextButton(
+                  onPressed: divide,
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.all(40),
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Colors.white, width: 5),
+                          borderRadius: BorderRadius.circular(12))),
+                  child: const Text("/"),
+                ),
+              ],
+            ),
+          ],
+        ));
   }
 }
